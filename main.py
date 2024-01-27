@@ -1,7 +1,7 @@
 import json, requests
 from PIL import Image
 from io import BytesIO
-
+from datetime import datetime 
 
 class File:
 
@@ -18,6 +18,20 @@ class File:
     def get_objects(self):
         with open("api_data.json","r") as f:
             return json.load(f)
+        
+    def write_date(self, date):
+        with open("dates.txt","r+") as f:
+            copy = f.read()
+            f.seek(0)
+            f.write(date+"\n"+copy)
+            
+    def already_updated(self, date):
+        with open("dates.txt","r") as f:
+            old_date = f.readline()[:-1]
+            if date != old_date:
+                print(date,f.readline())
+                return True
+            return False
 
 def all_items():
     for item in items:
@@ -33,7 +47,7 @@ def save_image(image_url,name):
         image_data = BytesIO(response.content)
         image = Image.open(image_data)
         name = name
-        image.save(name+".png")
+        image.save(f"bundle/{name}.png")
         print(f"Image saved as {name}")
     else:
         print("Failed to fetch image")
@@ -56,9 +70,18 @@ def other_item_pic():
         image_url = item_info["images"]["featured"]
         name = item_info["name"]
         print(name)
-        input()        
-    
+        input()      
 f = File()
+time = datetime.now()        
+
+date = time.strftime("%x")
+print("today",date,"now",time.now())
+f.write_date(date)
+print(f.already_updated(date))
+
+raise Exception ("balls ")
+    
+
 data = f.get_objects()
 print(data["data"]["daily"].keys())
 print(data["data"]["featured"]["entries"][0]["bundle"]["name"])
