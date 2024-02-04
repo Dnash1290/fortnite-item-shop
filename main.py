@@ -72,15 +72,13 @@ def other_item_pic():
         print(name)
         input()      
 f = File()
+f.get_request()
 time = datetime.now()        
 
 date = time.strftime("%x")
 print("today",date,"now",time.now())
-f.write_date(date)
+f.write_date(date)l
 print(f.already_updated(date))
-
-raise Exception ("balls ")
-    
 
 data = f.get_objects()
 print(data["data"]["daily"].keys())
